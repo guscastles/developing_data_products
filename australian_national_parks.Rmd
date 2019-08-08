@@ -26,7 +26,7 @@ a_map <- leaflet() %>%
 
 In a separate R script file, a web scraping application was created to fetch the available parks from the Wikipedia. Please check the [GitHub repository][1] for the source code.
 
-[1]: https://github.com/guscastles/leaflet/
+[1]: https://github.com/guscastles/developing_data_products/tree/gh_pages
 ```{r parks, message=FALSE, warning=FALSE}
 source("web_scraping.R")
 parks <- get_parks()
