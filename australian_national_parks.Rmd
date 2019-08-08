@@ -1,0 +1,61 @@
+```{r date_setup, echo=FALSE, message=FALSE}
+library(lubridate)
+```
+---
+title: "Peer-graded Assignment: R Markdown and Leaflet"
+author: "Gus Garcia"
+date: `r strftime(lubridate::now(), "%e %B %Y")`
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstract
+This is a report created with R Markdown and Leaflet, showing the location of most of the Australian National Parks.
+
+## Creating A Leaflet Object
+```{r eval, comment=""}
+library(leaflet)
+a_map <- leaflet() %>%
+    addTiles()
+```
+
+## Fetching Park Information
+
+In a separate R script file, a web scraping application was created to fetch the available parks from the Wikipedia. Please check the [GitHub repository][1] for the source code.
+
+[1]: https://github.com/guscastles/leaflet/
+```{r parks, message=FALSE, warning=FALSE}
+source("web_scraping.R")
+parks <- get_parks()
+colours <- list("cyan", "black", "purple", "blue", "green", "red", "magenta", "pink", "orange")
+names(colours) <- ordered(levels(parks$division))
+parks$colour <- lapply(parks$division, function(x) {colours[[x]]})
+parks$location <- paste(parks$name, parks$division, sep = ", ")
+```
+
+Colours are added by state and territory, as well as location, as a combination of `name` and `division`.
+
+
+## Circle Markers For The Australian National Parks
+
+Click on the markers to see the name of a chosen park.
+```{r markers}
+a_map <- a_map %>%
+    leaflet::addCircleMarkers(lat = parks$latitude,
+                     lng = parks$longitude,
+                     popup = parks$location,
+                     color = parks$colour,
+                     weight = 1)
+a_map
+```
+
+## GitHub Repository
+
+[Leaflet Document Repository][1]
+
+[1]: https://github.com/guscastles/data_science/leaflet/
+```{r comment=""}
+```
