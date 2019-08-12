@@ -19,7 +19,7 @@ library(plotly)
 library(png)
 ```
 
-## Contour Points Dataset
+## Image Points Dataset
 
 This is a dataset, from the PNG image `smiley.png`
 ```{r dataset, echo=TRUE}
