@@ -1,0 +1,33 @@
+---
+title: "Smiley Face"
+author: "Gus Garcia"
+date: "12 August 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstract
+
+This is a surface plot to demonstrate the features in the `Plotly` package.
+
+## Libraries Used
+```{r contours, echo=TRUE, message=FALSE}
+library(plotly)
+library(png)
+```
+
+## Contour Points Dataset
+
+This is a dataset, from the PNG image `smiley.png`
+```{r dataset, echo=TRUE}
+image <- readPNG("smiley.png")
+
+```
+
+## Surface Plot
+```{r plot, echo=TRUE, message=FALSE}
+plot_ly(z = ~image, type = "surface")
+```
