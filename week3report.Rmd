@@ -2,7 +2,7 @@
 title: "Smiley Face"
 author: "Gus Garcia"
 date: "12 August 2019"
-output: html_document
+output: slidy_presentation
 ---
 
 ```{r setup, include=FALSE}
