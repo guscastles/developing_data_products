@@ -9,6 +9,9 @@
 
 library(shiny)
 library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(repmis)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -33,9 +36,20 @@ shinyServer(function(input, output) {
   
     output$onlyWinners <- renderPlot({
         if (input$onlyWinners) {
-            g <- ggplot(data.frame(x=1:10), aes(x))
-            g + geom_bar() +
-                coord_flip()
+            data <- repmis::source_data("https://guscastles.github.io/developing_data_products/winners.csv")
+            winners <- data %>%
+                           select(Winner) %>%
+                           group_by(Winner) %>%
+                           count
+            winners <- winners[order(winners$n, decreasing = TRUE),]
+            g <- ggplot(winners, aes(x = reorder(Winner, n), y = n))
+            g + geom_bar(stat = "identity", aes(fill = Winner)) +
+                coord_flip() +
+                xlab("Countries") +
+                ylab("Number Of Wins") +
+                ggtitle("Number Of Wins per Country") +
+                theme(legend.position = "none")
+                
         }
     })
 })
