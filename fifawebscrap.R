@@ -8,6 +8,10 @@ tournaments <- function(url) {
         (function(href) {paste0(main_website, href)})
 }
 
+changeGermany <- function(team) {
+    if(team == "Germany FR") "Germany" else as.character(team)
+}
+
 pastStats <- function(url) {
     stats_url <- gsub("index.html", "statistics/teams/goal-scored.html", url)
     edition <- str_match(url, "archive/(.+)/index")[2]
@@ -41,10 +45,6 @@ cleanText <- function(text) {
     text %>%
         str_trim %>%
         (function(text) {gsub("\r.+", "", text)})
-}
-
-changeGermany <- function(team) {
-    if(team == "Germany FR") "Germany" else as.character(team)
 }
 
 pastWinners <- function(url) {

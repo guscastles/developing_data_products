@@ -23,7 +23,7 @@ last_edition_url <- "https://www.fifa.com/worldcup/statistics/teams/goal-scored"
 To mine the information, web scraping techniques will be used so we can see how the tournament evolved over time.
 
 The library used is **rvest** and the data fetched using functions in  **fifawebscrap.R**<sup>1</sup>
-```{r}
+```{r fifawebscrap}
 source("fifawebscrap.R")
 ```
 <sup>1</sup> [GitHub repository](https://github.com/guscastles/developing_data_products/)
@@ -79,4 +79,12 @@ How many goals do you think they have scored? How many goals do you think they w
 
 ## A Shiny App - Goals Galore
 
-[The web app with dynamic settings](https://guscastles.shinyapps.io/project/)
+Explore the past, present, and future of the FIFA World Cup with our exciting app.
+
+See:
+
+- Total goals scored by tournament
+- Goals scored by winner
+- Take a glimpse into possible future results
+
+[Visit our Shiny App now!](https://guscastles.shinyapps.io/project/). Hosted on [shinyapps.io](https://www.shinyapps.io)
