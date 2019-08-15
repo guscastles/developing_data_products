@@ -11,16 +11,25 @@ library(shiny)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-   
-  output$distPlot <- renderPlot({
-    
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
-  })
   
+    output$linePlot <- renderPlot({
+        set.seed(2019-08-05)
+        #nNumbers <- input$numeric
+        xMin <- input$editions[1]
+        xMax <- input$editions[2]
+        yMin <- 10
+        yMax <- 20
+        xData <- seq(xMin, xMax, by=4)
+        yData <- runif(length(xData), yMin, yMax)
+        xLab <- input$totalGoals
+        yLab <- "Goals Scored"
+        plot(xData, yData, xlim = c(1926, 2030), ylim = c(1, 30),
+           xlab = xLab, ylab = yLab)
+    })
+  
+    output$onlyWinners <- renderPlot({
+        if (input$onlyWinners) {
+            barplot(1:10, 1:10, horiz = TRUE)
+        }
+    })
 })

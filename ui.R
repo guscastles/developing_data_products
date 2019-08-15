@@ -9,25 +9,22 @@
 
 library(shiny)
 
-# Define UI for application that draws a histogram
 shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
-    ),
-    
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("distPlot")
+    titlePanel("The History Of FIFA World Cup, In Goals"),
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("editions", "Editions:", value = c(2002, 2018),
+                        min = 1930, max = 2026, step = 4),
+            radioButtons("totalGoals", label = "Total Goals",
+                         choices = c("Per tournament", "Per winner"),
+                         choiceValues = c("tournament", "winner")
+            ),
+            checkboxInput("onlyWinners", "Total wins per country")
+        ),
+        mainPanel(
+            plotOutput("linePlot"),
+            textOutput("totalGoals"),
+            plotOutput("onlyWinners")
+        )
     )
-  )
 ))
