@@ -1,0 +1,84 @@
+---
+title: "The History Of FIFA World Cup, In Goals"
+author: "Gus Garcia"
+date: "14 August 2019"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## FIFA World Cup Tournaments - Goals Scored
+
+The FIFA World Cup has been around since 1930. Since the ultimate goal is to score goals, let us present how this event has been evolving over the years in terms of goals scored.
+
+**Data From FIFA Website**  
+FIFA provides all the information on the past and the next editions of the World Cup. The data is rich and freely available on its website.
+```{r url}
+main_website = "https://www.fifa.com"
+archive_url <- paste0(main_website, "/fifa-tournaments/archive/worldcup/index.html")
+last_edition_url <- "https://www.fifa.com/worldcup/statistics/teams/goal-scored"
+```
+To mine the information, web scraping techniques will be used so we can see how the tournament evolved over time.
+
+The library used is **rvest** and the data fetched using functions in  **fifawebscrap.R**<sup>1</sup>
+```{r}
+source("fifawebscrap.R")
+```
+<sup>1</sup> [GitHub repository](https://github.com/guscastles/developing_data_products/)
+
+---
+
+## Finding The Data
+
+**Past Editions** - From 1930 to 2014
+```{r past_editions}
+pastEditions <- lapply(tournaments(archive_url), pastStats)
+```
+
+**Last Edition** - 2018. The page structure and *url* for the last edition is different from the others, hence the specific function to fetch its data
+```{r last_edition}
+lastEdition <- lastStats(last_edition_url)
+```
+
+**Winners** - All the winners from all editions
+```{r winners}
+last_awards_url <- "https://www.fifa.com/worldcup/awards/"
+winners <- rbind(lastWinner(last_awards_url), pastWinners(archive_url))
+```
+
+**Saving The Datasets** - Files used by the *Shiny web app* (wait for it!)
+```{r csv}
+dataset <- lastEdition
+for (edition in pastEditions)
+    dataset <- rbind(dataset, edition)
+write.csv(dataset, file = "tournaments.csv", row.names = FALSE)
+write.csv(winners, file = "winners.csv", row.names = FALSE)
+```
+
+---
+
+## What Is In A Goal?
+
+The next editions of the FIFA World Cup will be
+
+1. Qatar 2022
+2. United 2026
+
+These are the countries that have won the tournament
+```{r all_winners, echo=FALSE, comment=""}
+library(tidyr)
+library(dplyr)
+n_wins <- winners %>% select(Winner) %>% group_by(Winner) %>% count
+colnames(n_wins) <- c("Country", "Wins")
+as.matrix(n_wins[order(n_wins$Wins, decreasing = TRUE),])
+```
+How many goals do you think they have scored?
+
+```{r}
+```
+
+## A Shiny App - Goals Galore
+
+[The web app with dynamic settings](https://guscastles.shinyapps.io/project/)
