@@ -8,13 +8,13 @@
 #
 
 library(shiny)
+library(ggplot2)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
     output$linePlot <- renderPlot({
-        set.seed(2019-08-05)
-        #nNumbers <- input$numeric
+        set.seed(2019-08-15)
         xMin <- input$editions[1]
         xMax <- input$editions[2]
         yMin <- 10
@@ -23,13 +23,19 @@ shinyServer(function(input, output) {
         yData <- runif(length(xData), yMin, yMax)
         xLab <- input$totalGoals
         yLab <- "Goals Scored"
-        plot(xData, yData, xlim = c(1926, 2030), ylim = c(1, 30),
-           xlab = xLab, ylab = yLab)
+        g <- ggplot(data.frame(x=xData, y=yData), aes(x, y))
+        g + geom_line() +
+            xlim(c(1926, 2030)) +
+            ylim(c(1, 30)) +
+            xlab(xLab) +
+            ylab(yLab)
     })
   
     output$onlyWinners <- renderPlot({
         if (input$onlyWinners) {
-            barplot(1:10, 1:10, horiz = TRUE)
+            g <- ggplot(data.frame(x=1:10), aes(x))
+            g + geom_bar() +
+                coord_flip()
         }
     })
 })
