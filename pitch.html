@@ -441,8 +441,8 @@ FIFA provides all the information on the past and the next editions of the World
 <a class="sourceLine" id="cb1-2" data-line-number="2">archive_url &lt;-<span class="st"> </span><span class="kw">paste0</span>(main_website, <span class="st">&quot;/fifa-tournaments/archive/worldcup/index.html&quot;</span>)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">last_edition_url &lt;-<span class="st"> &quot;https://www.fifa.com/worldcup/statistics/teams/goal-scored&quot;</span></a></code></pre></div>
 <p>To mine the information, web scraping techniques will be used so we can see how the tournament evolved over time.</p>
-<p>The library used is <strong>rvest</strong> and the data fetched using functions in <strong>webscrap.R</strong><sup>1</sup></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">source</span>(<span class="st">&quot;webscrap.R&quot;</span>)</a></code></pre></div>
+<p>The library used is <strong>rvest</strong> and the data fetched using functions in <strong>fifawebscrap.R</strong><sup>1</sup></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">source</span>(<span class="st">&quot;fifawebscrap.R&quot;</span>)</a></code></pre></div>
 <p><sup>1</sup> <a href="https://github.com/guscastles/developing_data_products/">GitHub repository</a></p>
 </div>
 <div id="finding-the-data" class="slide section level2">
@@ -455,11 +455,9 @@ FIFA provides all the information on the past and the next editions of the World
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">last_awards_url &lt;-<span class="st"> &quot;https://www.fifa.com/worldcup/awards/&quot;</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">winners &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">lastWinner</span>(last_awards_url), <span class="kw">pastWinners</span>(archive_url))</a></code></pre></div>
 <p><strong>Saving The Datasets</strong> - Files used by the <em>Shiny web app</em> (wait for it!)</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">dataset &lt;-<span class="st"> </span>lastEdition</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="cf">for</span> (edition <span class="cf">in</span> pastEditions)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">    dataset &lt;-<span class="st"> </span><span class="kw">rbind</span>(dataset, edition)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw">write.csv</span>(dataset, <span class="dt">file =</span> <span class="st">&quot;tournaments.csv&quot;</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw">write.csv</span>(winners, <span class="dt">file =</span> <span class="st">&quot;winners.csv&quot;</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">dataset &lt;-<span class="st"> </span><span class="kw">Reduce</span>(rbind, pastEditions, lastEdition)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">write.csv</span>(dataset, <span class="dt">file =</span> <span class="st">&quot;tournaments.csv&quot;</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">write.csv</span>(winners, <span class="dt">file =</span> <span class="st">&quot;winners.csv&quot;</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
 <div id="what-is-in-a-goal" class="slide section level2">
 <h1>What Is In A Goal?</h1>
@@ -478,11 +476,11 @@ FIFA provides all the information on the past and the next editions of the World
 [6,] &quot;Uruguay&quot;   &quot;2&quot; 
 [7,] &quot;Spain&quot;     &quot;1&quot; 
 [8,] &quot;England&quot;   &quot;1&quot; </code></pre>
-<p>How many goals do you think they have scored?</p>
+<p>How many goals do you think they have scored? How many goals do you think they will score? Which country is going to win in the next edition?</p>
 </div>
 <div id="a-shiny-app---goals-galore" class="slide section level2">
 <h1>A Shiny App - Goals Galore</h1>
-<p><a href="https://guscastles.github.io/developing_data_products/">The web app with dynamic settings</a></p>
+<p><a href="https://guscastles.shinyapps.io/project/">The web app with dynamic settings</a></p>
 </div>
 
   <!-- dynamically load mathjax for compatibility with self-contained -->

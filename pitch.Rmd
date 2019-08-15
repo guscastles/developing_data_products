@@ -50,9 +50,7 @@ winners <- rbind(lastWinner(last_awards_url), pastWinners(archive_url))
 
 **Saving The Datasets** - Files used by the *Shiny web app* (wait for it!)
 ```{r csv}
-dataset <- lastEdition
-for (edition in pastEditions)
-    dataset <- rbind(dataset, edition)
+dataset <- Reduce(rbind, pastEditions, lastEdition)
 write.csv(dataset, file = "tournaments.csv", row.names = FALSE)
 write.csv(winners, file = "winners.csv", row.names = FALSE)
 ```
@@ -74,7 +72,7 @@ n_wins <- winners %>% select(Winner) %>% group_by(Winner) %>% count
 colnames(n_wins) <- c("Country", "Wins")
 as.matrix(n_wins[order(n_wins$Wins, decreasing = TRUE),])
 ```
-How many goals do you think they have scored?
+How many goals do you think they have scored? How many goals do you think they will score? Which country is going to win in the next edition?
 
 ```{r}
 ```
