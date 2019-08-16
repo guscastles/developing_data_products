@@ -13,31 +13,47 @@ library(dplyr)
 library(tidyr)
 library(repmis)
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
+    winnersData <- repmis::source_data("https://guscastles.github.io/developing_data_products/winners.csv")
+    
     output$linePlot <- renderPlot({
         set.seed(2019-08-15)
         xMin <- input$editions[1]
         xMax <- input$editions[2]
-        yMin <- 10
-        yMax <- 20
-        xData <- seq(xMin, xMax, by=4)
-        yData <- runif(length(xData), yMin, yMax)
-        xLab <- input$totalGoals
+        data <- repmis::source_data("https://guscastles.github.io/developing_data_products/tournaments.csv")
+        dateFilter <- (data$Year >= xMin) & (data$Year <= xMax)
+        if (input$totalGoals == "Per Tournament") {
+            dt <- data[dateFilter,] %>%
+                      select(Year, Goals.for, Penalty.goal) %>%
+                      mutate(Goals = Penalty.goal + Goals.for)
+            plotData <- aggregate(Goals ~ Year, data=dt, FUN= sum)
+        } else {
+            goalsByWinner <- winnersData %>%
+                                 select(Year)
+            dt <- data[dateFilter,] %>%
+                select(Year, Goals.for, Penalty.goal) %>%
+                mutate(Goals = Penalty.goal + Goals.for)
+            plotData <- aggregate(Goals ~ Year, data=dt, FUN= sum)
+        }
+        xLab <- "Year"
         yLab <- "Goals Scored"
-        g <- ggplot(data.frame(x=xData, y=yData), aes(x, y))
-        g + geom_line() +
-            xlim(c(1926, 2030)) +
-            ylim(c(1, 30)) +
+        mainTitle <- paste("Goals Scored", input$totalGoals)
+        xLabels = seq(xMin, xMax, 4)
+        g <- ggplot(plotData, aes(x=Year, y=Goals))
+        g + geom_bar(stat = "identity", aes(fill = Year)) +
+            geom_line(color = "red", lwd = 2) +
             xlab(xLab) +
-            ylab(yLab)
+            ylab(yLab) +
+            ggtitle(mainTitle) +
+            scale_x_continuous(breaks=xLabels, labels=xLabels) +
+            theme(legend.position = "none") +
+            geom_text(aes(label=Goals, fontface="bold"), colour = "white", nudge_y = -20)
     })
   
     output$onlyWinners <- renderPlot({
         if (input$onlyWinners) {
-            data <- repmis::source_data("https://guscastles.github.io/developing_data_products/winners.csv")
-            winners <- data %>%
+            winners <- winnersData %>%
                            select(Winner) %>%
                            group_by(Winner) %>%
                            count

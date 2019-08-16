@@ -16,7 +16,7 @@ shinyUI(fluidPage(
             sliderInput("editions", "Editions", value = c(2002, 2018),
                         min = 1930, max = 2026, step = 4),
             radioButtons("totalGoals", label = "Total Goals",
-                         choices = c("Per tournament", "Per winner")),
+                         choices = c("Per Tournament", "Per Winner")),
             checkboxInput("onlyWinners", "Wins per country"),
             h3("How To Use The App"),
             h4("Editions"),
@@ -26,11 +26,13 @@ shinyUI(fluidPage(
             div("Choose between total goals from the tournament or just from the winners."),
             h4("Wins Per Country"),
             div("If checked, displays the total wins per country."),
-            div("Only winners are diplayed.")
+            div("Only winners are diplayed."),
+            em("Notes"),
+            div("No editions in 1942 and 1946 due to WWII."),
+            div("2020 and 2026 are predictions based on the current data.")
         ),
         mainPanel(
             plotOutput("linePlot"),
-            textOutput("totalGoals"),
             plotOutput("onlyWinners")
         )
     )
