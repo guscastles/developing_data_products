@@ -67,11 +67,14 @@ pastWinners <- function(url) {
     xPath <- "//h3[contains(text(), 'Winner')]/following-sibling::div[@class='t-n']/span[@class='t-nText ']/a"
     urls <- tournaments(url) %>%
         lapply(function(text) {gsub("/index", "/awards/index", text)})
-    winners <- data.frame(Edition=c(), Winner=c())
+    winners <- data.frame(Host=c(), Year=c(), Winner=c())
     for (url in urls) {
         finalists <- read_html(url) %>% html_nodes(xpath = xPath) %>% html_text
         edition <- str_match(url, "/(\\w+\\d{4})/")[2]
-        winners <- rbind(winners, data.frame(Edition=edition, Winner=finalists[1]))
+        host_year <- hostYear(edition)
+        winners <- rbind(winners, data.frame(Host=host_year[[1]],
+                                             Year=as.numeric(host_year[[2]]),
+                                             Winner=finalists[1]))
     }
     winners$Winner <- sapply(winners$Winner, changeGermany)
     winners
@@ -80,5 +83,7 @@ pastWinners <- function(url) {
 lastWinner <- function(url) {
     xPath <- "//span[@class='fi-t__nText ']"
     finalists <- read_html(url) %>% html_nodes(xpath = xPath) %>% html_text
-    data.frame(Edition="russia2018", Winner=finalists[1])
+    data.frame(Host="russia",
+               Year=2018,
+               Winner=finalists[1])
 }
