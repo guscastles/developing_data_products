@@ -12,6 +12,23 @@ changeGermany <- function(team) {
     if(team == "Germany FR") "Germany" else as.character(team)
 }
 
+hostYear <- function(edition) {
+    host <- sub("\\d+", "", edition)
+    year <- as.numeric(sub("\\D+", "", edition))
+    list(host, year)
+}
+
+tournamentData <- function(dataset, edition) {
+    host_year <- hostYear(edition)
+    nRows <- dim(dataset)[1]
+    data.frame(Host=rep(host_year[[1]], nRows),
+               Year=rep(as.numeric(host_year[[2]]), nRows),
+               Team=dataset["Team"],
+               Goals.for=as.numeric(unlist(dataset["Goals for"])),
+               Penalty.goal=as.numeric(unlist(dataset["Penalty goal"]))
+    )
+}
+
 pastStats <- function(url) {
     stats_url <- gsub("index.html", "statistics/teams/goal-scored.html", url)
     edition <- str_match(url, "archive/(.+)/index")[2]
@@ -24,21 +41,20 @@ pastStats <- function(url) {
         sapply(function(text) {substring(text, 1, str_length(text) - 2)})
     df <- as.data.frame(matrix(stats, ncol = length(header), byrow = TRUE))
     colnames(df) <- header
-    df$Teams <- df$Teams %>% sapply(changeGermany)
-    data.frame(data.frame(Edition=rep(edition, dim(df)[1])), df[, c("Teams", "Goals for", "Penalty goal")])
+    df$Team <- df$Teams %>% sapply(changeGermany)
+    tournamentData(df[,-2], edition)
 }
 
 lastStats <- function(url) {
     root <- read_html(url)
     stats <- html_nodes(root, "table#goal-scored > tbody > tr > td") %>%
         sapply(html_text)
-    edition <- "russia2018"
     header <- html_nodes(root, "table#goal-scored > thead > tr > th") %>%
         html_text %>% cleanText
     df <- as.data.frame(matrix(stats, ncol = length(header), byrow = TRUE))
-    colnames(df) <- c("Position", "Teams", header[-c(1, 2)])
-    df$Teams <- df$Teams %>% cleanText %>% sapply(changeGermany)
-    data.frame(data.frame(Edition=rep(edition, dim(df)[1])), df[, c("Teams", "Goals for", "Penalty goal")])
+    colnames(df) <- c("Position", "Team", header[-c(1, 2)])
+    df$Team <- df$Team %>% cleanText %>% sapply(changeGermany)
+    tournamentData(df, "russia2018")
 }
 
 cleanText <- function(text) {

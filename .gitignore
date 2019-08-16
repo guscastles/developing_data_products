@@ -2,3 +2,4 @@
 .Rhistory
 .directory
 rsconnect/
+*.log
