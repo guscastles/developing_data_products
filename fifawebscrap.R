@@ -23,9 +23,9 @@ tournamentData <- function(dataset, edition) {
     nRows <- dim(dataset)[1]
     data.frame(Host=rep(host_year[[1]], nRows),
                Year=rep(as.numeric(host_year[[2]]), nRows),
-               Team=dataset["Team"],
-               Goals.for=as.numeric(unlist(dataset["Goals for"])),
-               Penalty.goal=as.numeric(unlist(dataset["Penalty goal"]))
+               Team=dataset$Team,
+               Goals.for=unlist(dataset[,"Goals for"]),
+               Penalty.goal=unlist(dataset[,"Penalty goal"])
     )
 }
 
